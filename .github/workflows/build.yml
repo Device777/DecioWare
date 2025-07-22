@@ -4,26 +4,23 @@ on:
   push:
     branches:
       - main
-  pull_request:
 
 jobs:
   build:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Build dylib
-      run: |
-        xcodebuild -project DeviceWare.xcodeproj \
-                   -scheme DeviceWare \
-                   -configuration Release \
-                   -sdk iphoneos \
-                   BUILD_DIR=$PWD/build \
-                   clean build
+      - name: Compile dylib with clang
+        run: |
+          SDK="$(xcrun --sdk iphoneos --show-sdk-path)"
+          clang -isysroot "$SDK" -arch arm64 -dynamiclib -ObjC DeviceWare.m \
+                -o libDeviceWare.dylib \
+                -current_version 1.0 -compatibility_version 1.0
 
-    - name: Upload dylib artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: DeviceWare-dylib
-        path: build/Release-iphoneos/libDeviceWare.dylib
+      - name: Upload dylib
+        uses: actions/upload-artifact@v4
+        with:
+          name: DeviceWare-dylib
+          path: libDeviceWare.dylib
