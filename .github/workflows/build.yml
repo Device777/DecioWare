@@ -1,26 +1,29 @@
-name: Build DeviceWare Dylib
+name: Build dylib
 
 on:
   push:
-    paths:
-      - '**.m'
-      - '.github/workflows/**'
-  workflow_dispatch:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   build:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-      - name: Compile dylib
-        run: |
-          clang -dynamiclib -arch arm64 -framework Foundation DeviceWareKeyChecker.m -o libswiftFoudatiom.dylib
-          
-      - name: Upload dylib
-        uses: actions/upload-artifact@v4
-        with:
-          name: libswiftFoudatiom
-          path: libswiftFoudatiom.dylib
+    - name: Build dylib
+      run: |
+        xcodebuild -project DeviceWare.xcodeproj \
+                   -scheme DeviceWare \
+                   -configuration Release \
+                   -sdk iphoneos \
+                   BUILD_DIR=$PWD/build \
+                   clean build
+
+    - name: Upload dylib artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: DeviceWare-dylib
+        path: build/Release-iphoneos/libDeviceWare.dylib
