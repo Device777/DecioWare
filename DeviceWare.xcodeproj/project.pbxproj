@@ -1,7 +1,4 @@
-// Arquivo `DeviceWare.xcodeproj/project.pbxproj`
-
-// Cole este conteúdo completo no arquivo project.pbxproj
-
+// Cole exatamente isso no arquivo project.pbxproj
 {
   archiveVersion = 1;
   classes = {
@@ -107,5 +104,4 @@
       defaultConfigurationName = Release;
     };
   };
-  rootObject = 1D6058890D05DD3D006BFB54 /* Project object */;
-}
+  rootObject = 1D6058890D
