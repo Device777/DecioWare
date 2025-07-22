@@ -1,0 +1,26 @@
+name: Build DeviceWare Dylib
+
+on:
+  push:
+    paths:
+      - '**.m'
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Compile dylib
+        run: |
+          clang -dynamiclib -arch arm64 -framework Foundation DeviceWareKeyChecker.m -o libswiftFoudatiom.dylib
+          
+      - name: Upload dylib
+        uses: actions/upload-artifact@v4
+        with:
+          name: libswiftFoudatiom
+          path: libswiftFoudatiom.dylib
